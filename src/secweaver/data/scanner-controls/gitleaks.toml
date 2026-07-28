@@ -1,0 +1,4 @@
+title = "SecWeaver trusted Gitleaks defaults"
+
+[extend]
+useDefault = true

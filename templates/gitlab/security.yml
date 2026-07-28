@@ -1,0 +1,55 @@
+# Include this file by immutable commit:
+#   include:
+#     - project: YOUR_GROUP/secweaver
+#       ref: REPLACE_WITH_40_CHARACTER_COMMIT_SHA
+#       file: /templates/gitlab/security.yml
+#       inputs:
+#         profile: balanced
+#
+# Typed `spec:inputs` requires GitLab 17.0 or newer.
+# Merge-request jobs must not receive protected variables or privileged runners.
+spec:
+  inputs:
+    profile:
+      description: SecWeaver policy profile
+      default: balanced
+      options:
+        - advisory
+        - balanced
+        - strict
+---
+secweaver:
+  stage: test
+  image:
+    name: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    entrypoint:
+      - ""
+  timeout: 30m
+  interruptible: true
+  variables:
+    # Full history enables Gitleaks history scanning. Use --no-history if this is
+    # too expensive for a particular repository.
+    GIT_DEPTH: "0"
+    SECWEAVER_PROFILE: "$[[ inputs.profile ]]"
+  script:
+    - >-
+      secweaver
+      --no-project-config
+      --profile "$SECWEAVER_PROFILE"
+      scan
+      --target .
+      --report-dir secweaver-reports
+      --execution native
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - secweaver-reports/
+    reports:
+      junit: secweaver-reports/junit.xml
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+# GitLab security dashboards require tier-specific report schemas. This portable
+# template intentionally publishes raw SecWeaver reports and JUnit only.

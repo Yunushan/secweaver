@@ -1,0 +1,13 @@
+[project]
+name = "synthetic-fixture-project"
+
+[scan]
+profile = "strict"
+timeout_seconds = 120
+parallelism = 1
+enabled_scanners = ["gitleaks", "trivy"]
+required_scanners = ["gitleaks"]
+history = false
+
+[reports]
+retain_raw = false

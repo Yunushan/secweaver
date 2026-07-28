@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "secweaver"
+version = "0.1.0"
+description = "Portable, policy-driven security CI/CD orchestration for any Git platform"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "0BSD" }
+authors = [
+  { name = "SecWeaver contributors" },
+]
+keywords = [
+  "devsecops",
+  "ci-cd",
+  "security",
+  "sast",
+  "sca",
+  "sbom",
+  "secret-scanning",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: BSD :: FreeBSD",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security",
+  "Topic :: Software Development :: Build Tools",
+]
+dependencies = []
+
+[project.scripts]
+secweaver = "secweaver.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/secweaver"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"rules/secweaver-baseline.yml" = "secweaver/data/rules/secweaver-baseline.yml"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "S", "UP", "B", "SIM", "RUF"]
+ignore = ["S603"]
+
+[tool.coverage.run]
+branch = true
+source = ["secweaver"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true

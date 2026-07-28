@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:secweaver:schema:verdict:1",
+  "title": "SecWeaver policy verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "passed", "exit_code", "reasons", "counts"],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "exit_code": {
+      "enum": [0, 1]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  }
+}

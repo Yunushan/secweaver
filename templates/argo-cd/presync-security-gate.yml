@@ -1,0 +1,73 @@
+# Argo CD is a deployment controller, not source CI. Run source scans in CI.
+# This optional PreSync gate verifies the exact immutable application image that
+# GitOps is about to deploy. Replace both image digest placeholders.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: secweaver-security-gate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    # Retain the completed Job until the next sync for logs and troubleshooting.
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: secweaver-security-gate
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: verify
+          image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+          imagePullPolicy: IfNotPresent
+          workingDir: /workspace
+          command:
+            - /usr/local/bin/secweaver
+          args:
+            - --no-project-config
+            - --profile
+            - strict
+            - scan
+            - --image
+            - YOUR_APPLICATION_IMAGE@sha256:REPLACE_WITH_DIGEST
+            - --report-dir
+            - secweaver-reports
+            - --execution
+            - native
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+            - name: temporary
+              mountPath: /tmp
+      volumes:
+        - name: workspace
+          emptyDir: {}
+        - name: temporary
+          emptyDir: {}
+
+# The scanner receives no Kubernetes token, deployment credentials, privileged
+# mode, or container-engine control socket. Configure registry access outside
+# this Pod or scan a publicly readable artifact. Selective syncs can skip hooks.

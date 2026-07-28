@@ -1,0 +1,33 @@
+# SecWeaver outputs
+/secweaver-reports/
+/.secweaver-cache/
+/.secweaver-offline/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+/.coverage
+/.pytest_cache/
+/.ruff_cache/
+/.venv/
+/build/
+/dist/
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local-only configuration and credentials
+/.env
+/.env.*
+!/.env.example
+/secweaver.local.toml
+/config/private/
+*.pem
+*.key
+*.p12
+*.pfx

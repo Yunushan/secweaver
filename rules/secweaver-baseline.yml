@@ -1,0 +1,65 @@
+# Copyright (c) SecWeaver contributors
+# SPDX-License-Identifier: 0BSD
+#
+# Deliberately small, locally auditable baseline. These rules are a portable
+# safety net, not a replacement for a reviewed language/framework rule pack.
+rules:
+  - id: secweaver.remote-script-pipe
+    languages: [generic]
+    severity: ERROR
+    message: Piping a remote response into a shell enables supply-chain code execution.
+    metadata:
+      category: supply-chain
+      confidence: HIGH
+      cwe: CWE-494
+    pattern-regex: '(?i)\b(?:curl|wget)\b[^\r\n|]{0,500}\|\s*(?:sudo\s+)?(?:ba|z|k)?sh\b'
+
+  - id: secweaver.dynamic-code-execution
+    languages: [generic]
+    severity: WARNING
+    message: Dynamic code execution requires strict input provenance and validation.
+    metadata:
+      category: code-injection
+      confidence: MEDIUM
+      cwe: CWE-95
+    pattern-regex: '(?i)\b(?:eval|exec|Invoke-Expression|loadstring)\s*(?:\(|\s)'
+
+  - id: secweaver.disabled-tls-verification
+    languages: [generic]
+    severity: ERROR
+    message: TLS certificate verification appears to be disabled.
+    metadata:
+      category: insecure-transport
+      confidence: HIGH
+      cwe: CWE-295
+    pattern-regex: '(?i)(?:verify\s*=\s*false|rejectUnauthorized\s*:\s*false|InsecureSkipVerify\s*:\s*true|CURLOPT_SSL_VERIFYPEER\s*,\s*(?:0|false))'
+
+  - id: secweaver.weak-password-hash
+    languages: [generic]
+    severity: WARNING
+    message: MD5 or SHA-1 should not be used for password hashing.
+    metadata:
+      category: weak-cryptography
+      confidence: MEDIUM
+      cwe: CWE-328
+    pattern-regex: '(?i)\b(?:md5|sha1)\s*\([^)\r\n]*(?:passw|credential|secret)'
+
+  - id: secweaver.world-writable-permission
+    languages: [generic]
+    severity: WARNING
+    message: World-writable permissions should be replaced with least-privilege permissions.
+    metadata:
+      category: permissions
+      confidence: MEDIUM
+      cwe: CWE-732
+    pattern-regex: '(?i)\b(?:chmod\s+(?:-R\s+)?777|mode\s*[:=]\s*["'']?0?777)'
+
+  - id: secweaver.shell-command-string
+    languages: [generic]
+    severity: WARNING
+    message: Shell command execution with a constructed string can allow command injection.
+    metadata:
+      category: command-injection
+      confidence: LOW
+      cwe: CWE-78
+    pattern-regex: '(?i)\b(?:shell\s*=\s*true|["''](?:sh|bash|cmd(?:\.exe)?|powershell(?:\.exe)?)["'']\s*,\s*["''](?:-c|/c|/C|-[Cc]ommand)["''])'

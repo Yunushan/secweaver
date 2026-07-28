@@ -1,0 +1,19 @@
+[project]
+name = "offline-example"
+
+[scan]
+profile = "strict"
+execution = "native"
+offline = true
+report_dir = "secweaver-reports"
+sast_rule_paths = ["builtin:baseline"]
+
+[offline]
+home_dir = ".secweaver-offline/home"
+trivy_cache_dir = ".secweaver-offline/trivy-cache"
+osv_database_path = ".secweaver-offline/osv-db"
+
+[reports]
+retain_raw = false
+retain_logs = false
+privacy = "strict"

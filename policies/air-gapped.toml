@@ -1,0 +1,23 @@
+[scan]
+profile = "strict"
+execution = "native"
+offline = true
+required_scanners = ["gitleaks", "trivy", "opengrep", "osv"]
+
+[policy]
+fail_on_severities = ["CRITICAL", "HIGH", "MEDIUM"]
+fail_on_categories = ["secret", "misconfiguration"]
+missing_required_tool = "fail"
+scanner_error = "fail"
+require_immutable_images = true
+
+[reports]
+retain_raw = false
+retain_logs = false
+privacy = "strict"
+include_absolute_paths = false
+
+[offline]
+home_dir = ".secweaver-offline/home"
+trivy_cache_dir = ".secweaver-offline/trivy-cache"
+osv_database_path = ".secweaver-offline/osv-db"

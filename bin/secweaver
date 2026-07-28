@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+SECWEAVER_BIN_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+SECWEAVER_ROOT=$(CDPATH= cd -- "${SECWEAVER_BIN_DIR}/.." && pwd)
+
+if [ -d "${SECWEAVER_ROOT}/src/secweaver" ]; then
+  if [ -n "${PYTHONPATH:-}" ]; then
+    PYTHONPATH="${SECWEAVER_ROOT}/src:${PYTHONPATH}"
+  else
+    PYTHONPATH="${SECWEAVER_ROOT}/src"
+  fi
+  export PYTHONPATH
+fi
+
+exec "${PYTHON:-python3}" -m secweaver "$@"

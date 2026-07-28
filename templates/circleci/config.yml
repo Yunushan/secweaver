@@ -1,0 +1,49 @@
+# Copy to .circleci/config.yml. For cross-repository reuse, publish the command
+# and job as a versioned orb and pin that orb to an immutable release policy.
+# Do not attach privileged contexts to the pull-request security job.
+version: 2.1
+
+commands:
+  secweaver_scan:
+    parameters:
+      profile:
+        type: enum
+        enum:
+          - advisory
+          - balanced
+          - strict
+        default: balanced
+    steps:
+      - run:
+          name: Run SecWeaver
+          command: |
+            secweaver \
+              --no-project-config \
+              --profile "$SECWEAVER_PROFILE" \
+              scan \
+              --target . \
+              --report-dir secweaver-reports \
+              --execution native
+          environment:
+            SECWEAVER_PROFILE: << parameters.profile >>
+
+jobs:
+  security:
+    docker:
+      - image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    steps:
+      - checkout
+      - secweaver_scan:
+          profile: balanced
+      # CircleCI runs these special steps after an earlier failure, except when
+      # the job is cancelled or reaches its runtime timeout.
+      - store_test_results:
+          path: secweaver-reports/junit.xml
+      - store_artifacts:
+          path: secweaver-reports
+          destination: secweaver
+
+workflows:
+  security:
+    jobs:
+      - security

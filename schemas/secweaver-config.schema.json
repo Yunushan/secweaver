@@ -1,0 +1,281 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:secweaver:schema:config:1",
+  "title": "SecWeaver TOML configuration or overlay",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "enum": ["advisory", "balanced", "strict"]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_kind": {
+          "enum": ["source", "image"]
+        },
+        "image": {
+          "type": "string"
+        },
+        "execution": {
+          "enum": ["auto", "native", "container"]
+        },
+        "container_engine": {
+          "enum": ["docker", "podman"]
+        },
+        "report_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enabled_scanners": {
+          "$ref": "#/$defs/scanners"
+        },
+        "required_scanners": {
+          "$ref": "#/$defs/scanners"
+        },
+        "history": {
+          "type": "boolean"
+        },
+        "offline": {
+          "type": "boolean"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "parallelism": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "excludes": {
+          "$ref": "#/$defs/string_array"
+        },
+        "sast_rule_paths": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/string_array"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        },
+        "generate_sbom": {
+          "type": "boolean"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fail_on_severities": {
+          "type": "array",
+          "items": {
+            "enum": ["UNKNOWN", "INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
+          }
+        },
+        "fail_on_categories": {
+          "$ref": "#/$defs/string_array"
+        },
+        "missing_required_tool": {
+          "enum": ["fail", "warn", "ignore"]
+        },
+        "scanner_error": {
+          "enum": ["fail", "warn", "ignore"]
+        },
+        "max_findings": {
+          "type": "integer",
+          "minimum": -1
+        },
+        "require_immutable_images": {
+          "type": "boolean"
+        }
+      }
+    },
+    "reports": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "enum": ["json", "markdown", "junit", "sarif"]
+          }
+        },
+        "retain_raw": {
+          "type": "boolean"
+        },
+        "retain_logs": {
+          "type": "boolean"
+        },
+        "privacy": {
+          "enum": ["standard", "strict"]
+        },
+        "include_absolute_paths": {
+          "const": false
+        }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gitleaks": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "const": "gitleaks"
+            },
+            "version": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "image": {
+              "$ref": "#/$defs/oci_image"
+            }
+          }
+        },
+        "trivy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "const": "trivy"
+            },
+            "version": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "image": {
+              "$ref": "#/$defs/oci_image"
+            }
+          }
+        },
+        "opengrep": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "const": "opengrep"
+            },
+            "version": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "image": {
+              "$ref": "#/$defs/oci_image"
+            }
+          }
+        },
+        "osv": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "const": "osv-scanner"
+            },
+            "version": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "image": {
+              "$ref": "#/$defs/oci_image"
+            }
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "passthrough": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "CI",
+              "COMSPEC",
+              "DOCKER_CONFIG",
+              "HTTP_PROXY",
+              "HTTPS_PROXY",
+              "LANG",
+              "LC_ALL",
+              "NO_PROXY",
+              "PATH",
+              "PATHEXT",
+              "SSL_CERT_DIR",
+              "SSL_CERT_FILE",
+              "SYSTEMROOT",
+              "TEMP",
+              "TMP",
+              "TMPDIR",
+              "WINDIR"
+            ]
+          }
+        }
+      }
+    },
+    "offline": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "home_dir": {
+          "type": "string"
+        },
+        "trivy_cache_dir": {
+          "type": "string"
+        },
+        "osv_database_path": {
+          "type": "string"
+        }
+      }
+    },
+    "languages": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "catalog": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonempty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "oci_image": {
+      "type": "string",
+      "pattern": "^(?:|[A-Za-z0-9][A-Za-z0-9._/:@+\\-]*)$"
+    },
+    "scanners": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["gitleaks", "trivy", "opengrep", "osv"]
+      }
+    },
+    "string_array": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

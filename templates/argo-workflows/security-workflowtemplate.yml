@@ -1,0 +1,89 @@
+# Namespace-scoped reusable Argo WorkflowTemplate.
+# The caller supplies the source artifact. Output artifacts require an Argo
+# artifact repository configured by the cluster administrator. No repository,
+# registry, or deployment credentials are passed to the scanner container.
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: secweaver
+spec:
+  entrypoint: scan
+  automountServiceAccountToken: false
+  # Required when automatic token mounting is disabled. Create this dedicated
+  # ServiceAccount and bind only the executor permissions required by the
+  # installed Argo Workflows version; the scanner container remains tokenless.
+  executor:
+    serviceAccountName: secweaver-workflow-executor
+  activeDeadlineSeconds: 1800
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+    fsGroupChangePolicy: OnRootMismatch
+  ttlStrategy:
+    secondsAfterCompletion: 86400
+  arguments:
+    parameters:
+      - name: profile
+        value: balanced
+  templates:
+    - name: scan
+      inputs:
+        parameters:
+          - name: profile
+        artifacts:
+          - name: source
+            path: /workspace/source
+      container:
+        image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+        workingDir: /workspace/source
+        command:
+          - /usr/local/bin/secweaver
+        args:
+          - --no-project-config
+          - --profile
+          - "{{inputs.parameters.profile}}"
+          - scan
+          - --target
+          - .
+          - --report-dir
+          - secweaver-reports
+          - --execution
+          - native
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65532
+          runAsGroup: 65532
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      outputs:
+        artifacts:
+          - name: reports
+            path: /workspace/source/secweaver-reports
+            archive:
+              none: {}
+
+# Example caller:
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   generateName: secweaver-
+# spec:
+#   workflowTemplateRef:
+#     name: secweaver
+#   arguments:
+#     parameters:
+#       - name: profile
+#         value: balanced
+#     artifacts:
+#       - name: source
+#         git:
+#           repo: https://YOUR_PUBLIC_GIT_HOST/YOUR_ORG/YOUR_REPO.git
+#           revision: REPLACE_WITH_IMMUTABLE_COMMIT_SHA
+#
+# Do not insert untrusted repository URLs or revisions into shell commands.

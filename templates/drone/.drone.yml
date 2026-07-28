@@ -1,0 +1,46 @@
+# Copy to the repository root as .drone.yml.
+# Drone has no built-in durable report artifact store. Add a storage plugin only
+# to a separate trusted push pipeline; do not give its credentials to PR jobs.
+kind: pipeline
+type: docker
+name: secweaver
+
+clone:
+  depth: 0
+
+steps:
+  - name: scan
+    image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    environment:
+      SECWEAVER_PROFILE: balanced
+    commands:
+      - >-
+        secweaver
+        --no-project-config
+        --profile "$SECWEAVER_PROFILE"
+        scan
+        --target .
+        --report-dir secweaver-reports
+        --execution native
+
+  - name: report-summary
+    image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    commands:
+      - |
+        if [ -f secweaver-reports/summary.md ]; then
+          sed -n '1,160p' secweaver-reports/summary.md
+        else
+          echo "SecWeaver did not produce a summary."
+        fi
+    when:
+      status:
+        - success
+        - failure
+
+trigger:
+  event:
+    - push
+    - pull_request
+
+# Repository secrets are normally withheld from pull requests, but this template
+# does not reference secrets and should remain secretless.

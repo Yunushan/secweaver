@@ -1,0 +1,92 @@
+# SecWeaver public baseline. Keep organization-specific settings in
+# secweaver.local.toml or a separately controlled overlay.
+
+[project]
+name = "secweaver"
+
+[scan]
+profile = "balanced"
+target = "."
+target_kind = "source"
+execution = "auto"
+container_engine = "docker"
+report_dir = "secweaver-reports"
+enabled_scanners = ["gitleaks", "trivy", "opengrep", "osv"]
+required_scanners = ["gitleaks", "trivy", "opengrep", "osv"]
+history = true
+offline = false
+timeout_seconds = 900
+parallelism = 2
+excludes = [
+  ".git",
+  ".hg",
+  ".svn",
+  ".venv",
+  ".secweaver-offline",
+  "node_modules",
+  "vendor",
+  "secweaver-reports",
+]
+sast_rule_paths = ["builtin:baseline"]
+generate_sbom = true
+
+[policy]
+fail_on_severities = ["CRITICAL", "HIGH"]
+fail_on_categories = ["secret"]
+missing_required_tool = "fail"
+scanner_error = "fail"
+max_findings = -1
+require_immutable_images = false
+
+[reports]
+formats = ["json", "markdown", "junit", "sarif"]
+retain_raw = true
+retain_logs = false
+privacy = "standard"
+include_absolute_paths = false
+
+[tools.gitleaks]
+command = "gitleaks"
+version = "8.30.1"
+image = "docker.io/zricethezav/gitleaks:v8.30.1"
+
+[tools.trivy]
+command = "trivy"
+version = "0.72.0"
+image = "docker.io/aquasec/trivy:0.72.0"
+
+[tools.opengrep]
+command = "opengrep"
+version = "1.26.0"
+image = ""
+
+[tools.osv]
+command = "osv-scanner"
+version = "2.4.0"
+image = "ghcr.io/google/osv-scanner:v2.4.0"
+
+[environment]
+passthrough = [
+  "CI",
+  "LANG",
+  "LC_ALL",
+  "PATH",
+  "PATHEXT",
+  "SYSTEMROOT",
+  "TEMP",
+  "TMP",
+  "TMPDIR",
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "NO_PROXY",
+  "SSL_CERT_DIR",
+  "SSL_CERT_FILE",
+]
+
+[offline]
+home_dir = ""
+trivy_cache_dir = ""
+osv_database_path = ""
+
+[languages]
+catalog = ""

@@ -1,0 +1,59 @@
+{
+  "results": [
+    {
+      "packages": [
+        {
+          "groups": [
+            {
+              "ids": [
+                "SWV-1000",
+                "SWV-1000-ALIAS"
+              ]
+            }
+          ],
+          "package": {
+            "name": "fixture-lib",
+            "version": "0.0.0-test"
+          },
+          "vulnerabilities": [
+            {
+              "database_specific": {
+                "severity": "HIGH"
+              },
+              "id": "SWV-1000"
+            },
+            {
+              "id": "SWV-1000-ALIAS",
+              "severity": [
+                {
+                  "score": "9.8",
+                  "type": "CVSS_V3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "package": {
+            "name": "fixture-tool",
+            "version": "0.0.1-test"
+          },
+          "vulnerabilities": [
+            {
+              "id": "SWV-2000",
+              "severity": [
+                {
+                  "score": "9.8",
+                  "type": "CVSS_V3"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "source": {
+        "path": "requirements.lock"
+      }
+    }
+  ]
+}

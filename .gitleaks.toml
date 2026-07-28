@@ -1,0 +1,7 @@
+title = "SecWeaver Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+# Add project-specific allowlists narrowly and document why each is safe.
+# Never add a repository-wide stopword or path allowlist merely to make CI pass.

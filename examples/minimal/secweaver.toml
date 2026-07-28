@@ -1,0 +1,9 @@
+[project]
+name = "example-project"
+
+[scan]
+profile = "balanced"
+target = "."
+execution = "auto"
+report_dir = "secweaver-reports"
+sast_rule_paths = ["builtin:baseline"]

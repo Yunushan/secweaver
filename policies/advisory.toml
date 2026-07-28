@@ -1,0 +1,11 @@
+[scan]
+profile = "advisory"
+required_scanners = []
+
+[policy]
+fail_on_severities = []
+fail_on_categories = []
+missing_required_tool = "warn"
+scanner_error = "warn"
+max_findings = -1
+require_immutable_images = false

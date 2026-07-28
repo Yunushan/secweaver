@@ -1,0 +1,35 @@
+# Store the real overlay in a private policy repository or secret-controlled
+# CI configuration. This example contains no company identifiers or secrets.
+[project]
+name = "replace-with-project-slug"
+
+[scan]
+profile = "strict"
+execution = "native"
+required_scanners = ["gitleaks", "trivy", "opengrep", "osv"]
+sast_rule_paths = [
+  "builtin:baseline",
+  "config/private/company-rules.yml",
+]
+
+[policy]
+fail_on_severities = ["CRITICAL", "HIGH", "MEDIUM"]
+fail_on_categories = ["secret", "misconfiguration"]
+missing_required_tool = "fail"
+scanner_error = "fail"
+require_immutable_images = true
+
+[reports]
+retain_raw = false
+privacy = "strict"
+include_absolute_paths = false
+
+# Replace tags with internally approved immutable image digests.
+[tools.gitleaks]
+image = "registry.example.invalid/security/gitleaks@sha256:REPLACE_WITH_64_HEX_DIGEST"
+
+[tools.trivy]
+image = "registry.example.invalid/security/trivy@sha256:REPLACE_WITH_64_HEX_DIGEST"
+
+[tools.osv]
+image = "registry.example.invalid/security/osv-scanner@sha256:REPLACE_WITH_64_HEX_DIGEST"

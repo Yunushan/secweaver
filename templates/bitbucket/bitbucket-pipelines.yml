@@ -1,0 +1,43 @@
+# Copy to the repository root as bitbucket-pipelines.yml.
+# Cross-repository configuration imports are a Bitbucket Premium feature and can
+# be pinned to a protected tag, but not directly to a commit SHA.
+# Pull-request steps intentionally use no repository/deployment credentials.
+image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+
+clone:
+  depth: full
+
+definitions:
+  steps:
+    - step: &secweaver
+        name: SecWeaver security scan
+        max-time: 30
+        script:
+          - >-
+            secweaver
+            --no-project-config
+            --profile balanced
+            scan
+            --target .
+            --report-dir secweaver-reports
+            --execution native
+        artifacts:
+          upload:
+            - name: secweaver-reports
+              type: scoped
+              paths:
+                - secweaver-reports/**
+              capture-on: always
+
+pipelines:
+  pull-requests:
+    "**":
+      - step: *secweaver
+  branches:
+    main:
+      - step: *secweaver
+
+# Scoped artifact syntax requires a current Bitbucket Cloud/self-hosted runner.
+# On older runners, replace the upload mapping with:
+#   artifacts:
+#     - secweaver-reports/**

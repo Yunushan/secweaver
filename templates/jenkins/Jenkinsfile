@@ -1,0 +1,67 @@
+// Copy to Jenkinsfile or adapt into a tightly controlled Jenkins Shared Library.
+// Do not run untrusted pull requests on persistent agents or agents containing
+// credentials, deployment configuration, signing material, or an exposed
+// container-engine control socket.
+pipeline {
+    agent {
+        docker {
+            image 'YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST'
+            reuseNode true
+        }
+    }
+
+    options {
+        skipDefaultCheckout(true)
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+
+    parameters {
+        choice(
+            name: 'SECWEAVER_PROFILE',
+            choices: ['advisory', 'balanced', 'strict'],
+            description: 'SecWeaver policy profile'
+        )
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Security scan') {
+            steps {
+                withEnv(["SECWEAVER_PROFILE=${params.SECWEAVER_PROFILE}"]) {
+                    sh '''
+                        secweaver \
+                          --no-project-config \
+                          --profile "$SECWEAVER_PROFILE" \
+                          scan \
+                          --target . \
+                          --report-dir secweaver-reports \
+                          --execution native
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts(
+                artifacts: 'secweaver-reports/**',
+                allowEmpty: true,
+                fingerprint: true
+            )
+            junit(
+                testResults: 'secweaver-reports/junit.xml',
+                allowEmptyResults: true
+            )
+        }
+    }
+}
+
+// Jenkins' Docker Pipeline plugin launches the digest-pinned agent container.
+// This template does not expose a container-engine control socket to the build.

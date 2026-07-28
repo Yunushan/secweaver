@@ -1,0 +1,42 @@
+# Copy to .woodpecker/security.yml (or .woodpecker.yml for a single workflow).
+# Woodpecker has no built-in durable artifact store. Reports remain in the
+# workflow workspace; add a secret-backed storage plugin only in a separate,
+# trusted default-branch workflow, never in this pull-request workflow.
+steps:
+  - name: secweaver
+    image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    commands:
+      - >-
+        secweaver
+        --no-project-config
+        --profile balanced
+        scan
+        --target .
+        --report-dir secweaver-reports
+        --execution native
+    when:
+      - event:
+          - push
+          - pull_request
+
+  - name: report-summary
+    image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    commands:
+      - |
+        if [ -f secweaver-reports/summary.md ]; then
+          sed -n '1,160p' secweaver-reports/summary.md
+        else
+          echo "SecWeaver did not produce a summary."
+        fi
+    when:
+      - status:
+          - success
+          - failure
+
+when:
+  - event:
+      - push
+      - pull_request
+
+# Separate files under .woodpecker/ run on separate agents and do not share this
+# workspace. Use an explicitly configured artifact store between workflows.

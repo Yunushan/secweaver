@@ -1,0 +1,41 @@
+{
+  "Results": [
+    {
+      "Licenses": [
+        {
+          "Category": "NOTICE",
+          "Name": "Fixture-License",
+          "Severity": "LOW"
+        }
+      ],
+      "Misconfigurations": [
+        {
+          "ID": "CFG-0001",
+          "Severity": "MEDIUM",
+          "StartLine": 4,
+          "Title": "Synthetic configuration issue"
+        }
+      ],
+      "Secrets": [
+        {
+          "RuleID": "fixture.pattern",
+          "StartLine": 6,
+          "Title": "Synthetic pattern match"
+        }
+      ],
+      "Target": "requirements.lock",
+      "Vulnerabilities": [
+        {
+          "PkgIdentifier": {
+            "PURL": "pkg:generic/fixture-lib@0.0.0-test"
+          },
+          "PkgName": "fixture-lib",
+          "PrimaryURL": "https://example.invalid/advisories/SWV-0001",
+          "Severity": "CRITICAL",
+          "Title": "Synthetic vulnerable package",
+          "VulnerabilityID": "SWV-0001"
+        }
+      ]
+    }
+  ]
+}

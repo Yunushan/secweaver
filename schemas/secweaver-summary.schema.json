@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:secweaver:schema:summary:1",
+  "title": "SecWeaver normalized security summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "secweaver_version",
+    "project",
+    "run",
+    "languages",
+    "scanners",
+    "findings",
+    "policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "secweaver_version": {
+      "type": "string"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "started_at",
+        "finished_at",
+        "duration_seconds",
+        "profile",
+        "target_kind",
+        "execution",
+        "offline",
+        "host"
+      ],
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "profile": {
+          "enum": ["advisory", "balanced", "strict"]
+        },
+        "target_kind": {
+          "enum": ["source", "image"]
+        },
+        "execution": {
+          "enum": ["auto", "native", "container"]
+        },
+        "offline": {
+          "type": "boolean"
+        },
+        "host": {
+          "type": "object",
+          "required": ["os", "release", "architecture", "python"],
+          "properties": {
+            "os": {
+              "type": "string"
+            },
+            "release": {
+              "type": "string"
+            },
+            "architecture": {
+              "type": "string"
+            },
+            "python": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "languages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "scanners": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/scanner"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    }
+  },
+  "$defs": {
+    "scanner": {
+      "type": "object",
+      "required": [
+        "scanner",
+        "status",
+        "duration_seconds",
+        "exit_code",
+        "report_path",
+        "log_path",
+        "error",
+        "execution",
+        "tool_version",
+        "findings_count"
+      ],
+      "properties": {
+        "scanner": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "clean",
+            "findings",
+            "missing",
+            "error",
+            "timeout",
+            "invalid-report",
+            "skipped"
+          ]
+        },
+        "duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "exit_code": {
+          "type": ["integer", "null"]
+        },
+        "report_path": {
+          "type": ["string", "null"]
+        },
+        "log_path": {
+          "type": ["string", "null"]
+        },
+        "error": {
+          "type": "string"
+        },
+        "execution": {
+          "type": "string"
+        },
+        "tool_version": {
+          "type": "string"
+        },
+        "findings_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scanner",
+        "rule_id",
+        "severity",
+        "category",
+        "message",
+        "location",
+        "fingerprint",
+        "references"
+      ],
+      "properties": {
+        "scanner": {
+          "type": "string"
+        },
+        "rule_id": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": ["UNKNOWN", "INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
+        },
+        "category": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "reasons", "counts"],
+      "properties": {
+        "passed": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

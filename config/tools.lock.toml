@@ -1,0 +1,36 @@
+# Reviewed tool release pins. Update through a pull request that records release
+# notes, provenance, checksums or image digests, and regression-test results.
+lock_format = 1
+reviewed_at = "2026-07-28"
+
+[[tools]]
+name = "gitleaks"
+version = "8.30.1"
+license = "MIT"
+source = "https://github.com/gitleaks/gitleaks"
+container = "docker.io/zricethezav/gitleaks:v8.30.1"
+immutable_digest_required_for_release = true
+
+[[tools]]
+name = "trivy"
+version = "0.72.0"
+license = "Apache-2.0"
+source = "https://github.com/aquasecurity/trivy"
+container = "docker.io/aquasec/trivy:0.72.0"
+immutable_digest_required_for_release = true
+
+[[tools]]
+name = "opengrep"
+version = "1.26.0"
+license = "LGPL-2.1"
+source = "https://github.com/opengrep/opengrep"
+container = ""
+immutable_digest_required_for_release = true
+
+[[tools]]
+name = "osv-scanner"
+version = "2.4.0"
+license = "Apache-2.0"
+source = "https://github.com/google/osv-scanner"
+container = "ghcr.io/google/osv-scanner:v2.4.0"
+immutable_digest_required_for_release = true

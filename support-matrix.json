@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "snapshot_date": "2026-07-28",
+  "claims": {
+    "top_20": "Integration coverage across secret scanning, repository/filesystem scanning, dependency metadata where an ecosystem is available, and semantic or generic SAST. It does not mean every scanner detects every vulnerability class.",
+    "top_50": "Detection catalog and baseline generic coverage. Ecosystem and semantic depth vary by language.",
+    "platforms": "Orchestrator portability and source/image target coverage are distinct from availability of every native scanner binary on every host."
+  },
+  "core_scanners": [
+    {
+      "name": "Gitleaks",
+      "role": "Git history and working-tree secret detection",
+      "required_in_balanced": true
+    },
+    {
+      "name": "Trivy",
+      "role": "Vulnerabilities, misconfiguration, secrets, licenses, images and CycloneDX SBOM",
+      "required_in_balanced": true
+    },
+    {
+      "name": "Opengrep",
+      "role": "Multi-language SAST with local, reviewable rules",
+      "required_in_balanced": true
+    },
+    {
+      "name": "OSV-Scanner",
+      "role": "Lockfile and package vulnerability correlation",
+      "required_in_balanced": true
+    }
+  ],
+  "ci_adapters": [
+    "GitHub Actions",
+    "GitLab CI/CD",
+    "Gitea Actions",
+    "Forgejo Actions",
+    "Bitbucket Pipelines",
+    "Woodpecker CI",
+    "Drone CI",
+    "Jenkins",
+    "Azure Pipelines",
+    "CircleCI",
+    "Tekton",
+    "Argo Workflows",
+    "Argo CD verification hook"
+  ],
+  "platforms": [
+    {
+      "name": "Linux",
+      "orchestrator": "supported",
+      "source_target": "supported",
+      "image_target": "supported",
+      "native_scanners": "verify against the pinned tool release"
+    },
+    {
+      "name": "Windows / Windows Server",
+      "orchestrator": "supported by Python and PowerShell wrappers",
+      "source_target": "supported",
+      "image_target": "supported when the container engine and scanner support it",
+      "native_scanners": "verify per pinned tool; container execution is preferred"
+    },
+    {
+      "name": "macOS",
+      "orchestrator": "supported",
+      "source_target": "supported",
+      "image_target": "supported when the container engine is available",
+      "native_scanners": "verify per pinned tool"
+    },
+    {
+      "name": "FreeBSD",
+      "orchestrator": "supported by Python 3.11+",
+      "source_target": "supported",
+      "image_target": "scanner-dependent",
+      "native_scanners": "OSV-Scanner and Trivy packaging exists; verify the complete tool set"
+    },
+    {
+      "name": "Android",
+      "orchestrator": "not an Android-device runtime",
+      "source_target": "Android project source is supported on a normal CI host",
+      "image_target": "not applicable to APK/AAB artifacts in v0.1.0",
+      "native_scanners": "run on Linux, macOS, or Windows CI hosts"
+    }
+  ],
+  "tier_1_languages": [
+    "TypeScript",
+    "Python",
+    "JavaScript",
+    "Java",
+    "C#",
+    "PHP",
+    "Shell",
+    "C++",
+    "HCL/Terraform",
+    "Go",
+    "C",
+    "SQL",
+    "Rust",
+    "Kotlin",
+    "Ruby",
+    "Swift",
+    "Dart",
+    "R",
+    "Scala",
+    "Lua"
+  ],
+  "tier_2_count": 30
+}

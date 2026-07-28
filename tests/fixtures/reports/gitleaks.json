@@ -1,0 +1,9 @@
+[
+  {
+    "Description": "Synthetic detector fixture",
+    "File": "src/example.py",
+    "Fingerprint": "fixture-fingerprint-gitleaks-1",
+    "RuleID": "fixture.pattern",
+    "StartLine": 7
+  }
+]

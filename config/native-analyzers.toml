@@ -1,0 +1,82 @@
+# Optional ecosystem analyzers are intentionally descriptive, not executed by
+# the core. Add a typed Python adapter before enabling a command in production.
+
+[[analyzers]]
+language = "TypeScript"
+examples = ["eslint", "tsc", "npm audit"]
+
+[[analyzers]]
+language = "Python"
+examples = ["ruff", "mypy", "pip-audit"]
+
+[[analyzers]]
+language = "JavaScript"
+examples = ["eslint", "npm audit"]
+
+[[analyzers]]
+language = "Java"
+examples = ["SpotBugs", "PMD", "OWASP Dependency-Check"]
+
+[[analyzers]]
+language = "C#"
+examples = ["dotnet format", "Microsoft.CodeAnalysis.NetAnalyzers"]
+
+[[analyzers]]
+language = "PHP"
+examples = ["PHPStan", "Psalm", "composer audit"]
+
+[[analyzers]]
+language = "Shell"
+examples = ["ShellCheck"]
+
+[[analyzers]]
+language = "C++"
+examples = ["clang-tidy", "cppcheck"]
+
+[[analyzers]]
+language = "HCL/Terraform"
+examples = ["terraform validate", "tflint"]
+
+[[analyzers]]
+language = "Go"
+examples = ["go vet", "staticcheck", "govulncheck"]
+
+[[analyzers]]
+language = "C"
+examples = ["clang-tidy", "cppcheck"]
+
+[[analyzers]]
+language = "SQL"
+examples = ["SQLFluff"]
+
+[[analyzers]]
+language = "Rust"
+examples = ["clippy", "cargo audit"]
+
+[[analyzers]]
+language = "Kotlin"
+examples = ["detekt", "ktlint"]
+
+[[analyzers]]
+language = "Ruby"
+examples = ["RuboCop", "Brakeman", "bundler-audit"]
+
+[[analyzers]]
+language = "Swift"
+examples = ["SwiftLint", "swift package audit"]
+
+[[analyzers]]
+language = "Dart"
+examples = ["dart analyze"]
+
+[[analyzers]]
+language = "R"
+examples = ["lintr", "renv"]
+
+[[analyzers]]
+language = "Scala"
+examples = ["Scalafix", "Scalastyle"]
+
+[[analyzers]]
+language = "Lua"
+examples = ["luacheck"]

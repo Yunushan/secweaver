@@ -1,0 +1,11 @@
+[scan]
+profile = "strict"
+required_scanners = ["gitleaks", "trivy", "opengrep", "osv"]
+
+[policy]
+fail_on_severities = ["CRITICAL", "HIGH", "MEDIUM"]
+fail_on_categories = ["secret", "misconfiguration"]
+missing_required_tool = "fail"
+scanner_error = "fail"
+max_findings = -1
+require_immutable_images = true

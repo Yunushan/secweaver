@@ -1,0 +1,51 @@
+# Copy to .forgejo/workflows/secweaver.yml.
+# Forgejo Actions resembles GitHub Actions but is not guaranteed compatible.
+# Use Forgejo-tested action commits; artifact upload must be v3 or patched v4.
+name: SecWeaver
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    # Change this label to one configured on your Forgejo Runner.
+    runs-on: docker
+    timeout-minutes: 30
+    container:
+      image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    steps:
+      - name: Check out source
+        uses: https://data.forgejo.org/actions/checkout@REPLACE_WITH_FULL_COMMIT_SHA
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Run SecWeaver
+        shell: sh
+        run: >-
+          secweaver
+          --no-project-config
+          --profile balanced
+          scan
+          --target .
+          --report-dir secweaver-reports
+          --execution native
+
+      - name: Upload reports
+        if: ${{ always() }}
+        uses: https://data.forgejo.org/actions/upload-artifact@REPLACE_WITH_FULL_COMMIT_SHA
+        with:
+          name: secweaver-${{ forgejo.run_number }}
+          path: secweaver-reports/
+          if-no-files-found: warn
+          retention-days: 14
+
+# Fork pull_request jobs receive a read-only automatic token and no secrets.
+# Do not use a base-context PR event to check out or scan incoming code.

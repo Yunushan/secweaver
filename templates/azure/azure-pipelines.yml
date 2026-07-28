@@ -1,0 +1,63 @@
+# Copy to azure-pipelines.yml or extract the steps as a repository template.
+# Pin cross-repository templates by full commit SHA and enable required-template
+# approval. Fork pull requests must not receive secrets or use trusted agents.
+# The YAML `pr` trigger applies to GitHub and Bitbucket Cloud repositories.
+# For Azure Repos Git, configure this pipeline as a required target-branch
+# build-validation policy; Azure Repos ignores YAML PR trigger declarations.
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - "*"
+
+parameters:
+  - name: profile
+    displayName: SecWeaver policy profile
+    type: string
+    default: balanced
+    values:
+      - advisory
+      - balanced
+      - strict
+
+stages:
+  - stage: Security
+    jobs:
+      - job: SecWeaver
+        displayName: SecWeaver security scan
+        timeoutInMinutes: 30
+        pool:
+          vmImage: ubuntu-24.04
+        container: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+        steps:
+          - checkout: self
+            clean: true
+            fetchDepth: 0
+            persistCredentials: false
+
+          - bash: |
+              secweaver \
+                --no-project-config \
+                --profile "$SECWEAVER_PROFILE" \
+                scan \
+                --target . \
+                --report-dir secweaver-reports \
+                --execution native
+            displayName: Run SecWeaver
+            env:
+              SECWEAVER_PROFILE: ${{ parameters.profile }}
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish SecWeaver reports
+            condition: always()
+            inputs:
+              targetPath: secweaver-reports
+              artifact: secweaver-$(Build.BuildId)
+              publishLocation: pipeline
+
+# PublishPipelineArtifact@1 is Azure DevOps Services-only. Azure DevOps Server
+# users must replace it with PublishBuildArtifacts@1.

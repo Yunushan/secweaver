@@ -1,0 +1,70 @@
+# Copy this file to .github/workflows/secweaver.yml, or call it as a reusable workflow.
+# Replace the runner image digest placeholder before enabling the workflow.
+# The pull-request path is intentionally secretless and read-only.
+name: SecWeaver
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_call:
+    inputs:
+      profile:
+        description: SecWeaver policy profile
+        required: false
+        type: string
+        default: balanced
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Security scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    container:
+      image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    env:
+      # Direct push/PR runs have no workflow_call inputs, so they use balanced.
+      SECWEAVER_PROFILE: ${{ inputs.profile || 'balanced' }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate profile
+        shell: sh
+        run: |
+          case "$SECWEAVER_PROFILE" in
+            advisory|balanced|strict) ;;
+            *) echo "Unsupported SecWeaver profile" >&2; exit 2 ;;
+          esac
+
+      - name: Run SecWeaver
+        shell: sh
+        run: >-
+          secweaver
+          --no-project-config
+          --profile "$SECWEAVER_PROFILE"
+          scan
+          --target .
+          --report-dir secweaver-reports
+          --execution native
+
+      # This step does not change a failed scan into a pass.
+      - name: Upload reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: secweaver-${{ github.run_id }}-${{ github.job }}
+          path: secweaver-reports/
+          if-no-files-found: warn
+          include-hidden-files: false
+          retention-days: 14
+
+# Optional SARIF publication should be a separate trusted job with only
+# `security-events: write`. Do not grant that permission to this PR scan.

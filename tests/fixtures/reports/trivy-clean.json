@@ -1,0 +1,10 @@
+{
+  "ArtifactName": "synthetic-clean-fixture",
+  "ArtifactType": "filesystem",
+  "CreatedAt": "2026-07-28T00:00:00Z",
+  "ReportID": "00000000-0000-0000-0000-000000000000",
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.72.0"
+  }
+}

@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible SecWeaver defect without including secrets.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste credentials, private source, internal URLs, or unredacted scanner reports.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+      description: Include a minimal, sanitized reproduction.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SecWeaver version
+    validations:
+      required: true
+  - type: dropdown
+    id: host
+    attributes:
+      label: Host platform
+      options:
+        - Linux
+        - Windows / Windows Server
+        - macOS
+        - FreeBSD
+        - Other
+    validations:
+      required: true

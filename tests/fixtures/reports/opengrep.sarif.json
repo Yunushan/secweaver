@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "fingerprints": {
+            "fixture/v1": "fixture-fingerprint-opengrep-1"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/example.py"
+                },
+                "region": {
+                  "startLine": 11
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Synthetic static-analysis warning"
+          },
+          "ruleId": "fixture.warning"
+        },
+        {
+          "level": "error",
+          "message": "Synthetic static-analysis error",
+          "ruleId": "fixture.error"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Opengrep fixture",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "id": "fixture.warning"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

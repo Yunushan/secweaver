@@ -1,0 +1,51 @@
+# Copy to .gitea/workflows/secweaver.yml, or publish under
+# .gitea/scoped_workflows/ on Gitea 1.27+.
+# Scoped workflows are read from the source repository's current default branch,
+# so protect that branch and require review for every workflow change.
+name: SecWeaver
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    # Change this to a versioned label configured on your act_runner.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    container:
+      image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+    steps:
+      - name: Check out source
+        uses: https://gitea.com/actions/checkout@REPLACE_WITH_FULL_COMMIT_SHA
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Run SecWeaver
+        shell: sh
+        run: >-
+          secweaver
+          --no-project-config
+          --profile balanced
+          scan
+          --target .
+          --report-dir secweaver-reports
+          --execution native
+
+      - name: Upload reports
+        if: ${{ always() }}
+        uses: https://gitea.com/actions/upload-artifact@REPLACE_WITH_FULL_COMMIT_SHA
+        with:
+          name: secweaver-${{ gitea.run_number }}
+          path: secweaver-reports/
+          if-no-files-found: warn
+          retention-days: 14
+
+# Action and artifact protocol support varies by Gitea/act_runner release. Pin
+# commits from action versions explicitly supported by your instance.

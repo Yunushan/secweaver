@@ -1,0 +1,21 @@
+snapshot_date = "2026-07-28"
+method = "Maintained coverage priority informed by GitHub Octoverse 2025, Stack Overflow Developer Survey 2025, ecosystem relevance, and security-tool support. It is not presented as a universal popularity ranking."
+sources = [
+  "https://github.blog/news-insights/octoverse/octoverse-2025/",
+  "https://survey.stackoverflow.co/2025/technology/",
+  "https://github.com/github-linguist/linguist/blob/main/lib/linguist/languages.yml",
+]
+
+tier_1 = [
+  "TypeScript", "Python", "JavaScript", "Java", "C#", "PHP", "Shell", "C++",
+  "HCL/Terraform", "Go", "C", "SQL", "Rust", "Kotlin", "Ruby", "Swift",
+  "Dart", "R", "Scala", "Lua",
+]
+
+tier_2 = [
+  "Objective-C", "PowerShell", "Perl", "Groovy", "Elixir", "Clojure",
+  "Haskell", "Julia", "MATLAB", "COBOL", "Fortran", "Assembly", "Solidity",
+  "Apex", "Visual Basic .NET", "F#", "OCaml", "Erlang", "Common Lisp", "Scheme",
+  "Prolog", "Ada", "Zig", "Nim", "Crystal", "Tcl", "Delphi/Object Pascal",
+  "SAS", "ABAP", "VHDL",
+]

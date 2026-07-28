@@ -1,0 +1,403 @@
+# SecWeaver's maintained coverage catalog.
+# Tier 1 is the priority top-20 union used by this project. Tier 2 expands the
+# baseline to 50 languages. This is a coverage catalog, not a universal ranking.
+
+[[languages]]
+name = "TypeScript"
+tier = 1
+extensions = [".ts", ".tsx", ".mts", ".cts"]
+filenames = []
+ecosystems = ["npm"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Python"
+tier = 1
+extensions = [".py", ".pyi", ".pyw"]
+filenames = ["Pipfile"]
+ecosystems = ["PyPI"]
+semantic_sast = "community"
+
+[[languages]]
+name = "JavaScript"
+tier = 1
+extensions = [".js", ".jsx", ".mjs", ".cjs"]
+filenames = []
+ecosystems = ["npm"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Java"
+tier = 1
+extensions = [".java"]
+filenames = ["pom.xml"]
+ecosystems = ["Maven"]
+semantic_sast = "community"
+
+[[languages]]
+name = "C#"
+tier = 1
+extensions = [".cs", ".csx"]
+filenames = []
+ecosystems = ["NuGet"]
+semantic_sast = "community"
+
+[[languages]]
+name = "PHP"
+tier = 1
+extensions = [".php", ".php3", ".php4", ".php5", ".phtml"]
+filenames = ["composer.json"]
+ecosystems = ["Packagist"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Shell"
+tier = 1
+extensions = [".sh", ".bash", ".zsh", ".ksh"]
+filenames = [".bashrc", ".zshrc"]
+ecosystems = []
+semantic_sast = "experimental"
+
+[[languages]]
+name = "C++"
+tier = 1
+extensions = [".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx"]
+filenames = ["CMakeLists.txt"]
+ecosystems = ["Conan"]
+semantic_sast = "community"
+
+[[languages]]
+name = "HCL/Terraform"
+tier = 1
+extensions = [".tf", ".tfvars", ".hcl"]
+filenames = [".terraform.lock.hcl"]
+ecosystems = ["Terraform"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Go"
+tier = 1
+extensions = [".go"]
+filenames = ["go.mod", "go.sum"]
+ecosystems = ["Go"]
+semantic_sast = "community"
+
+[[languages]]
+name = "C"
+tier = 1
+extensions = [".c", ".h"]
+filenames = []
+ecosystems = ["Conan"]
+semantic_sast = "community"
+
+[[languages]]
+name = "SQL"
+tier = 1
+extensions = [".sql", ".ddl", ".dml"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Rust"
+tier = 1
+extensions = [".rs"]
+filenames = ["Cargo.toml", "Cargo.lock"]
+ecosystems = ["crates.io"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Kotlin"
+tier = 1
+extensions = [".kt", ".kts"]
+filenames = []
+ecosystems = ["Maven"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Ruby"
+tier = 1
+extensions = [".rb", ".rake", ".gemspec"]
+filenames = ["Gemfile", "Rakefile"]
+ecosystems = ["RubyGems"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Swift"
+tier = 1
+extensions = [".swift"]
+filenames = ["Package.swift", "Package.resolved"]
+ecosystems = ["SwiftURL"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Dart"
+tier = 1
+extensions = [".dart"]
+filenames = ["pubspec.yaml", "pubspec.lock"]
+ecosystems = ["Pub"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "R"
+tier = 1
+extensions = [".r", ".R"]
+filenames = ["renv.lock", "DESCRIPTION"]
+ecosystems = ["CRAN"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Scala"
+tier = 1
+extensions = [".scala", ".sc"]
+filenames = ["build.sbt"]
+ecosystems = ["Maven"]
+semantic_sast = "community"
+
+[[languages]]
+name = "Lua"
+tier = 1
+extensions = [".lua"]
+filenames = []
+ecosystems = ["LuaRocks"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Objective-C"
+tier = 2
+extensions = [".m", ".mm"]
+filenames = []
+ecosystems = ["CocoaPods"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "PowerShell"
+tier = 2
+extensions = [".ps1", ".psm1", ".psd1"]
+filenames = []
+ecosystems = ["PowerShellGallery"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Perl"
+tier = 2
+extensions = [".pl", ".pm", ".t"]
+filenames = ["Makefile.PL"]
+ecosystems = ["CPAN"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Groovy"
+tier = 2
+extensions = [".groovy", ".gvy", ".gy", ".gsh"]
+filenames = ["Jenkinsfile"]
+ecosystems = ["Maven"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Elixir"
+tier = 2
+extensions = [".ex", ".exs"]
+filenames = ["mix.exs", "mix.lock"]
+ecosystems = ["Hex"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Clojure"
+tier = 2
+extensions = [".clj", ".cljs", ".cljc", ".edn"]
+filenames = ["deps.edn", "project.clj"]
+ecosystems = ["Maven"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Haskell"
+tier = 2
+extensions = [".hs", ".lhs"]
+filenames = ["stack.yaml", "cabal.project"]
+ecosystems = ["Hackage"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Julia"
+tier = 2
+extensions = [".jl"]
+filenames = ["Project.toml", "Manifest.toml"]
+ecosystems = ["Julia"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "MATLAB"
+tier = 2
+extensions = [".m", ".mlx"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "COBOL"
+tier = 2
+extensions = [".cob", ".cbl", ".cpy"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Fortran"
+tier = 2
+extensions = [".f", ".for", ".f77", ".f90", ".f95", ".f03", ".f08"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Assembly"
+tier = 2
+extensions = [".asm", ".s", ".S"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Solidity"
+tier = 2
+extensions = [".sol"]
+filenames = []
+ecosystems = ["npm"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Apex"
+tier = 2
+extensions = [".cls", ".trigger"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Visual Basic .NET"
+tier = 2
+extensions = [".vb"]
+filenames = []
+ecosystems = ["NuGet"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "F#"
+tier = 2
+extensions = [".fs", ".fsi", ".fsx"]
+filenames = []
+ecosystems = ["NuGet"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "OCaml"
+tier = 2
+extensions = [".ml", ".mli"]
+filenames = ["dune-project", "opam"]
+ecosystems = ["opam"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Erlang"
+tier = 2
+extensions = [".erl", ".hrl"]
+filenames = ["rebar.config"]
+ecosystems = ["Hex"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Common Lisp"
+tier = 2
+extensions = [".lisp", ".lsp", ".cl"]
+filenames = []
+ecosystems = ["Quicklisp"]
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Scheme"
+tier = 2
+extensions = [".scm", ".ss"]
+filenames = []
+ecosystems = []
+semantic_sast = "experimental"
+
+[[languages]]
+name = "Prolog"
+tier = 2
+extensions = [".pro", ".prolog", ".yap"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Ada"
+tier = 2
+extensions = [".adb", ".ads", ".ada"]
+filenames = []
+ecosystems = ["Alire"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Zig"
+tier = 2
+extensions = [".zig"]
+filenames = ["build.zig", "build.zig.zon"]
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "Nim"
+tier = 2
+extensions = [".nim", ".nims", ".nimble"]
+filenames = []
+ecosystems = ["Nimble"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Crystal"
+tier = 2
+extensions = [".cr"]
+filenames = ["shard.yml", "shard.lock"]
+ecosystems = ["Shards"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Tcl"
+tier = 2
+extensions = [".tcl"]
+filenames = []
+ecosystems = ["Teapot"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "Delphi/Object Pascal"
+tier = 2
+extensions = [".pas", ".pp", ".dpr", ".dpk"]
+filenames = []
+ecosystems = ["GetIt"]
+semantic_sast = "generic"
+
+[[languages]]
+name = "SAS"
+tier = 2
+extensions = [".sas"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "ABAP"
+tier = 2
+extensions = [".abap"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"
+
+[[languages]]
+name = "VHDL"
+tier = 2
+extensions = [".vhd", ".vhdl"]
+filenames = []
+ecosystems = []
+semantic_sast = "generic"

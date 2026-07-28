@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+*.egg-info
+build
+dist
+secweaver-reports
+config/private
+secweaver.local.toml
+.env*
+*.pem
+*.key
+*.p12
+*.pfx

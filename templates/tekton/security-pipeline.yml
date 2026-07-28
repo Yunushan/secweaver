@@ -1,0 +1,111 @@
+# Tekton Pipelines v1 template.
+# The caller must populate the `shared` workspace with the repository before this
+# Pipeline starts. Back it with a PVC if reports must outlive an individual Pod.
+# Distribute this Task/Pipeline as a Tekton Bundle pinned by OCI digest.
+# The bound workspace must be writable by numeric UID/GID 65532.
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: secweaver-scan
+spec:
+  description: Run a secretless SecWeaver source scan.
+  params:
+    - name: profile
+      type: string
+      default: balanced
+  workspaces:
+    - name: source
+      description: Repository workspace; reports are written below it.
+  steps:
+    - name: scan
+      image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+      workingDir: $(workspaces.source.path)
+      command:
+        - /usr/local/bin/secweaver
+      args:
+        - --no-project-config
+        - --profile
+        - $(params.profile)
+        - scan
+        - --target
+        - .
+        - --report-dir
+        - secweaver-reports
+        - --execution
+        - native
+      env:
+        - name: PYTHONDONTWRITEBYTECODE
+          value: "1"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+  stepTemplate:
+    computeResources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "2"
+        memory: 4Gi
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: secweaver
+spec:
+  params:
+    - name: profile
+      type: string
+      default: balanced
+  workspaces:
+    - name: shared
+  tasks:
+    - name: scan
+      taskRef:
+        name: secweaver-scan
+      params:
+        - name: profile
+          value: $(params.profile)
+      workspaces:
+        - name: source
+          workspace: shared
+  finally:
+    - name: report-summary
+      workspaces:
+        - name: source
+          workspace: shared
+      taskSpec:
+        workspaces:
+          - name: source
+        steps:
+          - name: print
+            image: YOUR_RUNNER_IMAGE@sha256:REPLACE_WITH_DIGEST
+            workingDir: $(workspaces.source.path)
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - |
+                if [ -f secweaver-reports/summary.md ]; then
+                  sed -n '1,160p' secweaver-reports/summary.md
+                else
+                  echo "SecWeaver did not produce a summary."
+                fi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 65532
+              runAsGroup: 65532
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+
+# Tekton does not provide a stable, universal artifact store. Persist the shared
+# workspace or add a separately permissioned publisher Task only for trusted runs.
+# A webhook must create only parameterized PipelineRuns; never accept arbitrary
+# Task definitions from untrusted pull requests.
